@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>I Love You Bro - Report Form</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f4f4;
+      color: #222;
+    }
+    .container {
+      max-width: 800px;
+      margin: 4rem auto;
+      background: #e8e8e8;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+    }
+    h1 {
+      color: #d40000;
+      text-align: center;
+      font-size: 2.5rem;
+    }
+    label {
+      display: block;
+      margin-top: 1.5rem;
+      font-weight: bold;
+      color: #333;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 0.5rem;
+      border-radius: 8px;
+      border: none;
+      background: #fff;
+      color: #000;
+      font-size: 1rem;
+    }
+    textarea {
+      height: 120px;
+    }
+    .submit-btn {
+      display: block;
+      margin: 2rem auto 0 auto;
+      padding: 1rem 2rem;
+      background: #d40000;
+      border: none;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .submit-btn:hover {
+      background: #a80000;
+    }
+    .note {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 0.25rem;
+    }
+    .thank-you {
+      text-align: center;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: #fff0f0;
+      border-radius: 12px;
+      color: #a80000;
+      font-size: 1.2rem;
+      display: none;
+    }
+  </style>
+  <script>
+    function handleSubmit(event) {
+      event.preventDefault();
+      const form = document.querySelector("form");
+      const thankYouMessage = document.getElementById("thankYou");
+
+      fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: {
+          Accept: "application/json"
+        }
+      }).then(response => {
+        if (response.ok) {
+          form.style.display = "none";
+          thankYouMessage.style.display = "block";
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>I Love You Bro</h1>
+    <form action="https://formspree.io/f/xvgakgrp" method="POST" onsubmit="handleSubmit(event)">
+      <label>Your Name</label>
+      <input type="text" name="name" placeholder="Your name" />
+
+      <label>Age Range</label>
+      <select name="age_range">
+        <option disabled selected>Select your age group</option>
+        <option>Under 18</option>
+        <option>18–24</option>
+        <option>25–34</option>
+        <option>35–44</option>
+        <option>45–54</option>
+        <option>55+</option>
+      </select>
+
+      <label>Location (City or Region)</label>
+      <input type="text" name="location" placeholder="e.g. Salt Lake City, UT" />
+
+      <label>How are you feeling today?</label>
+      <select name="current_feelings">
+        <option disabled selected>Select how you’re feeling</option>
+        <option>Overwhelmed</option>
+        <option>Exhausted</option>
+        <option>Angry</option>
+        <option>Scared</option>
+        <option>Disconnected</option>
+        <option>Hopeful</option>
+        <option>Supported</option>
+        <option>Suicidal</option>
+      </select>
+
+      <label>What happened?</label>
+      <textarea name="event"></textarea>
+
+      <label>How has this affected you?</label>
+      <textarea name="impact"></textarea>
+
+      <label>Has anyone helped you yet?</label>
+      <textarea name="support"></textarea>
+
+      <label>What kind of support do you need?</label>
+      <textarea name="needs"></textarea>
+
+      <label>Do we have your consent to share this story anonymously for grants or reporting?</label>
+      <select name="consent">
+        <option disabled selected>Select one</option>
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+
+      <button type="submit" class="submit-btn">Submit Report</button>
+    </form>
+
+    <div id="thankYou" class="thank-you">
+      <p>Thank you for sharing your story. You are not alone — and your voice matters.</p>
+      <p><em>There is strength in speaking up. There is hope in being heard.</em></p>
+    </div>
+  </div>
+</body>
+</html>
