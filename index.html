@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CareFile - Trauma Report</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <div class="container">
+    <h1>CareFile Report Form</h1>
+    <p class="intro">You can share as much or as little as you’d like. Your story matters.</p>
+    <form id="careForm" action="https://formspree.io/f/xnndjyda" method="POST" onsubmit="handleSubmit(event)">
+      <label>1. What happened? (optional)</label>
+      <textarea name="event" required></textarea>
+
+      <label>2. How has this affected you?</label>
+      <textarea name="impact" required></textarea>
+
+      <label>3. Has anyone helped you?</label>
+      <textarea name="support" required></textarea>
+
+      <label>4. What support do you need?</label>
+      <textarea name="needs" required></textarea>
+
+      <label>
+        <input type="checkbox" name="consent" value="yes" required />
+        I agree for this story to be used anonymously in reporting or grant applications.
+      </label>
+
+      <button type="submit">Submit Report</button>
+    </form>
+
+    <div id="report" class="hidden">
+      <h2>Your Report</h2>
+      <pre id="reportContent"></pre>
+      <button onclick="copyReport()">Copy Report</button>
+      <button onclick="print()">Print Report</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
