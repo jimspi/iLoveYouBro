@@ -756,7 +756,15 @@
         </div>
     </div>
 
+   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://ujbwndxkqlgdszlxeenx.supabase.co'; // Replace with your Supabase URL
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqYnduZHhrcWxnZHN6bHhlZW54Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NDQ1MTksImV4cCI6MjA2NzUyMDUxOX0.XZZ623WE6m7tzMD5ZzzvpzSsUpZJRAS-B8vIkiC1zpE'; // Replace with your Supabase anon key
+        
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         let selectedFeeling = null;
         let selectedFeelingReasons = '';
 
@@ -889,8 +897,8 @@
                 });
             });
 
-            // Form submission - single submit with all data
-            document.getElementById('checkInForm').addEventListener('submit', function(e) {
+          // Form submission - single submit with Supabase
+            document.getElementById('checkInForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
                 if (!selectedFeeling) {
@@ -901,28 +909,33 @@
                 // Collect all form data
                 const formData = {
                     feeling: selectedFeeling,
-                    feelingReasons: selectedFeelingReasons,
-                    name: document.getElementById('nameField').value.trim(),
-                    notes: document.getElementById('notesText').value.trim(),
-                    timestamp: new Date().toISOString()
+                    feeling_reasons: selectedFeelingReasons,
+                    name: document.getElementById('nameField').value.trim() || null,
+                    notes: document.getElementById('notesText').value.trim() || null,
+                    created_at: new Date().toISOString()
                 };
-                
-                // Log what would be sent to backend
-                console.log('Data to send to backend:', formData);
                 
                 const submitBtn = this.querySelector('.submit-btn');
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Checking In...';
                 
-                // Simulate API call to backend
-                setTimeout(function() {
-                    // Here you would make your actual API call:
-                    // fetch('/api/checkin', {
-                    //     method: 'POST',
-                    //     headers: { 'Content-Type': 'application/json' },
-                    //     body: JSON.stringify(formData)
-                    // })
+                try {
+                    // Insert data into Supabase
+                    const { data, error } = await supabase
+                        .from('checkins')
+                        .insert([formData]);
                     
+                    if (error) {
+                        console.error('Error saving to Supabase:', error);
+                        alert('There was an error saving your check-in. Please try again.');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Check In';
+                        return;
+                    }
+                    
+                    console.log('Successfully saved to Supabase:', data);
+                    
+                    // Success - show confirmation
                     document.getElementById('successMessage').classList.add('show');
                     document.getElementById('checkInForm').reset();
                     document.querySelectorAll('.feeling-item').forEach(function(i) {
@@ -936,7 +949,13 @@
                     setTimeout(function() {
                         document.getElementById('successMessage').classList.remove('show');
                     }, 4000);
-                }, 1000);
+                    
+                } catch (err) {
+                    console.error('Network error:', err);
+                    alert('Network error. Please check your connection and try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Check In';
+                }
             });
         });
 
